@@ -1,50 +1,96 @@
-# Welcome to your Expo app 👋
+# 🚀 CampusEventHub
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**CampusEventHub** is a high-performance, professional event management platform designed for university ecosystems. It bridges the gap between student engagement and administrative efficiency through a seamless, real-time mobile experience.
 
-## Get started
+Built with a "Performance-First" mindset, the app utilizes a modern tech stack to ensure scalability, security, and a premium user experience inspired by the **ThinkPad X1 Carbon** aesthetic.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Core Features
 
-2. Start the app
+### 🔐 Authentication & RBAC (Role-Based Access Control)
+* **Student Access:** Discover, search, and register for campus events.
+* **Admin Power-Panel:** Secure dashboard for event creation, attendee management, and real-time analytics.
+* **Seamless Onboarding:** Validated registration and login flow powered by Supabase Auth.
 
-   ```bash
-   npx expo start
-   ```
+### 📅 Event Management
+* **Real-time Sync:** Instant updates using TanStack Query for a lag-free UI.
+* **Advanced Validation:** Robust form handling with React Hook Form and Zod schemas.
+* **Rich UI:** Smooth transitions and high-performance lists using FlashList and Reanimated.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠 Tech Stack
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+| Category           | Technology                                                                 |
+|--------------------|----------------------------------------------------------------------------|
+| **Framework** | React Native (Expo SDK 50+)                                               |
+| **Language** | TypeScript                                                                 |
+| **Backend / Auth** | Supabase (PostgreSQL, Auth, Storage)                                      |
+| **State / Cache** | TanStack Query (React Query)                                              |
+| **Navigation** | Expo Router (File-based routing)                                          |
+| **Styling** | React Native StyleSheet (ThinkPad Dark Theme)                             |
+| **Animations** | React Native Reanimated                                                   |
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🏗 Architecture
 
-```bash
-npm run reset-project
+The project follows a modular and scalable directory structure:
+
+```text
+├── app/                  # Expo Router directory (File-based navigation)
+│   ├── (admin)/          # Protected administrative routes
+│   ├── (auth)/           # Authentication flows (Login/Register)
+│   ├── (tabs)/           # Student main navigation
+│   └── _layout.tsx       # Global Providers (Auth, QueryClient)
+├── components/           # Reusable UI components
+├── services/             # API & Supabase service definitions
+├── store/                # Context API & Global state management
+├── utils/                # Helper functions & Zod schemas
+└── constants/            # Theme colors & configuration
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🚀 Getting Started
+### Prerequisites
 
-## Learn more
+- Node.js & npm
 
-To learn more about developing your project with Expo, look at the following resources:
+- Expo Go app on your physical device
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Installation
+1. Clone the repository:
+```bash
+git clone https://github.com/yassinekamouss/CampusEventHub.git
+```
 
-## Join the community
+2. Install dependencies:
 
-Join our community of developers creating universal apps.
+```bash
+npm install
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+3. Create a `.env` file in the root directory:
+```bash
+EXPO_PUBLIC_SUPABASE_URL=[https://your-project-id.supabase.co](https://your-project-id.supabase.co)
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+4. Start the development server:
+```bash
+npx expo start -c
+```
+
+## 🎨 Aesthetic & Design
+The application features a **Premium Dark Mode** theme:
+
+- `Background`: #121212 (Deep Black)
+
+- `Surface`: #1E1E1E (Anthracite)
+
+- `Accent`: #0066CC (Electric Blue)
+
+- `Typography`: Clean, high-contrast sans-serif.
+
+## Author
+**Yassine Kamouss** Software Engineering Student at FST Tanger
