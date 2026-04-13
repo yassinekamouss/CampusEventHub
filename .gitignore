@@ -25,13 +25,16 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+pnpm-debug.log*
 
 # macOS
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# Env files (TRÈS IMPORTANT POUR LA SÉCURITÉ : Supabase, OpenAI, etc.)
+.env
+.env.*
+!.env.example
 
 # typescript
 *.tsbuildinfo
