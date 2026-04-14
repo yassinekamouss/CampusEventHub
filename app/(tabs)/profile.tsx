@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -33,7 +34,7 @@ export default function ProfileScreen() {
     }
   };
 
-  const username = user?.email?.split('@')[0] || "Utilisateur";
+  const username = user?.email?.split("@")[0] || "Utilisateur";
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -47,27 +48,49 @@ export default function ProfileScreen() {
         </View>
         <Text style={styles.userName}>{username}</Text>
         <Text style={styles.userEmail}>{user?.email}</Text>
-        
-        <View style={[styles.roleBadge, profile?.role === 'admin' ? styles.roleBadgeAdmin : styles.roleBadgeStudent]}>
-          <Text style={styles.roleText}>{profile?.role === 'admin' ? 'Administrateur' : 'Étudiant'}</Text>
+
+        <View
+          style={[
+            styles.roleBadge,
+            profile?.role === "admin"
+              ? styles.roleBadgeAdmin
+              : styles.roleBadgeStudent,
+          ]}>
+          <Text style={styles.roleText}>
+            {profile?.role === "admin" ? "Administrateur" : "Étudiant"}
+          </Text>
         </View>
       </View>
 
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Mes Statistiques</Text>
-        
+
         {isLoading ? (
-          <ActivityIndicator size="small" color="#0066cc" style={{ marginVertical: 20 }} />
+          <ActivityIndicator
+            size="small"
+            color="#0066cc"
+            style={{ marginVertical: 20 }}
+          />
         ) : (
           <View style={styles.statsContainer}>
             <View style={styles.statBox}>
-              <Feather name="bookmark" size={24} color="#aaaaaa" style={styles.statIcon} />
+              <Feather
+                name="bookmark"
+                size={24}
+                color="#aaaaaa"
+                style={styles.statIcon}
+              />
               <Text style={styles.statValue}>{stats?.joined || 0}</Text>
               <Text style={styles.statLabel}>Événements rejoints</Text>
             </View>
-            
+
             <View style={styles.statBox}>
-              <Feather name="plus-circle" size={24} color="#aaaaaa" style={styles.statIcon} />
+              <Feather
+                name="plus-circle"
+                size={24}
+                color="#aaaaaa"
+                style={styles.statIcon}
+              />
               <Text style={styles.statValue}>{stats?.created || 0}</Text>
               <Text style={styles.statLabel}>Événements créés</Text>
             </View>
@@ -86,7 +109,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
   },
   content: {
     padding: 20,
@@ -99,39 +122,39 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
     letterSpacing: 0.5,
   },
   profileCard: {
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     borderRadius: 16,
     padding: 30,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
     marginBottom: 30,
   },
   avatarCircle: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.surface,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
     marginBottom: 16,
   },
   userName: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
     marginBottom: 4,
     textTransform: "capitalize",
   },
   userEmail: {
     fontSize: 14,
-    color: "#aaaaaa",
+    color: Colors.dark.textMuted,
     marginBottom: 16,
   },
   roleBadge: {
@@ -141,17 +164,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   roleBadgeStudent: {
-    backgroundColor: "rgba(170, 170, 170, 0.1)",
-    borderColor: "#555555",
+    backgroundColor: Colors.dark.cardMuted,
+    borderColor: Colors.dark.border,
   },
   roleBadgeAdmin: {
-    backgroundColor: "rgba(0, 102, 204, 0.1)",
-    borderColor: "#0066cc",
+    backgroundColor: Colors.dark.primarySoft,
+    borderColor: Colors.dark.primary,
   },
   roleText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#ffffff",
+    color: Colors.dark.text,
     textTransform: "uppercase",
     letterSpacing: 1,
   },
@@ -161,7 +184,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#888888",
+    color: Colors.dark.textMuted,
     marginBottom: 16,
     textTransform: "uppercase",
     letterSpacing: 1,
@@ -172,11 +195,11 @@ const styles = StyleSheet.create({
   },
   statBox: {
     width: "48%",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     borderRadius: 12,
     padding: 20,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
     alignItems: "center",
   },
   statIcon: {
@@ -185,12 +208,12 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: "#aaaaaa",
+    color: Colors.dark.textMuted,
     textAlign: "center",
     lineHeight: 18,
   },
@@ -198,15 +221,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     borderWidth: 1,
-    borderColor: "rgba(255, 68, 68, 0.3)",
+    borderColor: Colors.dark.dangerSoft,
     paddingVertical: 16,
     borderRadius: 12,
     marginTop: 10,
   },
   logoutText: {
-    color: "#ff4444",
+    color: Colors.dark.danger,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 10,

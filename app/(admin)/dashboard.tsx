@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -144,7 +145,7 @@ export default function AdminDashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
   },
   header: {
     flexDirection: "row",
@@ -154,18 +155,18 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#222222",
+    borderBottomColor: Colors.dark.border,
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: "600",
-    color: "#ffffff",
+    color: Colors.dark.text,
     letterSpacing: 0.5,
   },
   logoutButton: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
   },
   scrollContent: {
     padding: 20,
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#888888",
+    color: Colors.dark.textMuted,
     marginBottom: 16,
     textTransform: "uppercase",
     letterSpacing: 1,
@@ -188,11 +189,11 @@ const styles = StyleSheet.create({
   },
   statCard: {
     width: "48%",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     borderRadius: 12,
     padding: 20,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
   },
   statCardFull: {
     width: "100%",
@@ -200,20 +201,20 @@ const styles = StyleSheet.create({
   },
   statTitle: {
     fontSize: 13,
-    color: "#aaaaaa",
+    color: Colors.dark.textMuted,
     marginBottom: 12,
     fontWeight: "500",
   },
   statValue: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
   },
   mainActionBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0066cc",
+    backgroundColor: Colors.dark.primary,
     paddingVertical: 18,
     borderRadius: 12,
     marginTop: 20,
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   mainActionText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -230,12 +231,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
   },
   eventInfo: {
     flex: 1,
@@ -244,29 +245,29 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#ffffff",
+    color: Colors.dark.text,
     marginBottom: 4,
   },
   eventDate: {
     fontSize: 13,
-    color: "#aaaaaa",
+    color: Colors.dark.textMuted,
     marginBottom: 6,
   },
   categoryBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#333333",
+    backgroundColor: Colors.dark.chipBackground,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   categoryText: {
-    color: "#dddddd",
+    color: Colors.dark.text,
     fontSize: 11,
     fontWeight: "600",
   },
   deleteButton: {
     padding: 10,
-    backgroundColor: "#2a1e1e",
+    backgroundColor: Colors.dark.dangerSoft,
     borderRadius: 8,
   },
 });

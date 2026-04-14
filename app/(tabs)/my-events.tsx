@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -121,20 +122,20 @@ export default function MyEventsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
   },
   header: {
     paddingTop: 60,
     paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#222",
-    backgroundColor: "#121212",
+    borderBottomColor: Colors.dark.border,
+    backgroundColor: Colors.dark.background,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
   },
   listContainer: {
     padding: 20,
@@ -143,16 +144,16 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: Colors.dark.border,
   },
   cardIndicator: {
     width: 4,
     height: "100%",
-    backgroundColor: "#00aa66",
+    backgroundColor: Colors.dark.secondary,
     borderRadius: 4,
     marginRight: 16,
   },
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#fff",
+    color: Colors.dark.text,
   },
   detailsRow: {
     flexDirection: "row",
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   detailText: {
-    color: "#aaa",
+    color: Colors.dark.textMuted,
     fontSize: 13,
   },
   centerContainer: {
@@ -186,13 +187,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   emptyText: {
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 16,
   },
   emptySubtext: {
-    color: "#888",
+    color: Colors.dark.textMuted,
     fontSize: 14,
     marginTop: 8,
   },

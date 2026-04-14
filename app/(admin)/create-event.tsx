@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
@@ -246,7 +247,7 @@ export default function CreateEventScreen() {
         onPress={handleSubmit(onSubmit)}
         disabled={isSubmitting}>
         {isSubmitting ? (
-          <ActivityIndicator color="#121212" />
+          <ActivityIndicator color={Colors.dark.background} />
         ) : (
           <Text style={styles.submitButtonText}>Create Event</Text>
         )}
@@ -258,7 +259,7 @@ export default function CreateEventScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
   },
   content: {
     padding: 20,
@@ -267,24 +268,24 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: Colors.dark.text,
     marginBottom: 24,
   },
   inputContainer: {
     marginBottom: 20,
   },
   label: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 14,
     marginBottom: 8,
     fontWeight: "600",
   },
   input: {
-    backgroundColor: "transparent",
+    backgroundColor: Colors.dark.inputBackground,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.inputBorder,
     borderRadius: 8,
-    color: "#ffffff",
+    color: Colors.dark.text,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
@@ -294,10 +295,10 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   inputError: {
-    borderColor: "#ff4444",
+    borderColor: Colors.dark.danger,
   },
   errorText: {
-    color: "#ff4444",
+    color: Colors.dark.danger,
     fontSize: 12,
     marginTop: 4,
   },
@@ -308,28 +309,28 @@ const styles = StyleSheet.create({
   },
   categoryButton: {
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "transparent",
+    backgroundColor: Colors.dark.card,
   },
   categoryButtonActive: {
-    backgroundColor: "#ffffff",
-    borderColor: "#ffffff",
+    backgroundColor: Colors.dark.primary,
+    borderColor: Colors.dark.primary,
   },
   categoryButtonText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 14,
   },
   categoryButtonTextActive: {
-    color: "#121212",
+    color: Colors.dark.background,
     fontWeight: "bold",
   },
   imagePickerButton: {
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: Colors.dark.border,
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: "center",
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   imagePickerButtonText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -349,7 +350,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   submitButton: {
-    backgroundColor: "#0066cc",
+    backgroundColor: Colors.dark.primary,
     borderRadius: 8,
     paddingVertical: 16,
     alignItems: "center",
@@ -360,7 +361,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 16,
     fontWeight: "bold",
   },

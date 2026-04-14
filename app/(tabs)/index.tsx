@@ -1,19 +1,20 @@
+import { Colors } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Platform,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AnimatedPressable } from "../../components/ui/design/AnimatedPressable";
+import { Skeleton } from "../../components/ui/design/Skeleton";
 import { useAuth } from "../../hooks/use-auth";
 import { EventModel, useAdminEvents as useEvents } from "../../services/events";
 
@@ -52,7 +53,7 @@ export default function FeedScreen() {
       item.image_url || CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
 
     return (
-      <TouchableOpacity
+      <AnimatedPressable
         style={styles.eventCard}
         activeOpacity={0.8}
         onPress={() => router.push(`/event/${item.id}`)}>
@@ -76,7 +77,7 @@ export default function FeedScreen() {
             {item.description}
           </Text>
         </View>
-      </TouchableOpacity>
+      </AnimatedPressable>
     );
   };
 
@@ -94,20 +95,20 @@ export default function FeedScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" backgroundColor="#121212" />
+      <StatusBar style="light" backgroundColor={Colors.dark.background} />
 
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Découvrir</Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-          <TouchableOpacity
+          <AnimatedPressable
             style={styles.aiBtn}
             onPress={() => router.push("/ai-assistant")}>
-            <Feather name="sparkles" size={20} color="#0066cc" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={signOut} style={styles.logoutBtn}>
+            <Feather name="sparkles" size={20} color={Colors.dark.primary} />
+          </AnimatedPressable>
+          <AnimatedPressable onPress={signOut} style={styles.logoutBtn}>
             <Text style={styles.logoutText}>Déconnexion</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
       </View>
 
@@ -130,8 +131,29 @@ export default function FeedScreen() {
 
       {/* Feed Content */}
       {eventsQuery.isLoading ? (
-        <View style={styles.centerContent}>
-          <ActivityIndicator size="large" color="#e60000" />
+        <View style={styles.listContent}>
+          {[1, 2, 3].map((i) => (
+            <View key={i} style={styles.eventCard}>
+              <Skeleton height={180} />
+              <View style={styles.cardContent}>
+                <View style={styles.cardHeader}>
+                  <Skeleton width={80} height={20} />
+                  <Skeleton width={120} height={16} />
+                </View>
+                <Skeleton
+                  width="80%"
+                  height={24}
+                  style={{ marginBottom: 12 }}
+                />
+                <Skeleton
+                  width="50%"
+                  height={16}
+                  style={{ marginBottom: 12 }}
+                />
+                <Skeleton width="90%" height={14} />
+              </View>
+            </View>
+          ))}
         </View>
       ) : eventsQuery.isError ? (
         <View style={styles.centerContent}>
@@ -158,7 +180,7 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212", // dark theme bg
+    backgroundColor: Colors.dark.background,
   },
   header: {
     flexDirection: "row",
@@ -169,37 +191,37 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   headerTitle: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 28,
     fontWeight: "800",
     letterSpacing: -0.5,
   },
   aiBtn: {
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     padding: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: Colors.dark.border,
   },
   logoutBtn: {
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: Colors.dark.border,
   },
   logoutText: {
-    color: "#ccc",
+    color: Colors.dark.textMuted,
     fontSize: 14,
     fontWeight: "600",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: Colors.dark.border,
     borderRadius: 8,
     marginHorizontal: 20,
     marginBottom: 10,
@@ -211,7 +233,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 14,
   },
   centerContent: {
@@ -220,10 +242,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    color: "#e60000",
+    color: Colors.dark.danger,
   },
   emptyText: {
-    color: "#777",
+    color: Colors.dark.textMuted,
     textAlign: "center",
     marginTop: 40,
     fontSize: 16,
@@ -233,12 +255,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   eventCard: {
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.card,
     borderRadius: 16,
     marginBottom: 20,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#2a2a2a",
+    borderColor: Colors.dark.border,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -248,7 +270,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: "100%",
     height: 180,
-    backgroundColor: "#222",
+    backgroundColor: Colors.dark.surfaceAlt,
   },
   cardContent: {
     padding: 16,
@@ -260,37 +282,37 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   badge: {
-    backgroundColor: "#e60000", // Thinkpad red accent
+    backgroundColor: Colors.dark.primary,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 6,
   },
   badgeText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 10,
     fontWeight: "700",
     letterSpacing: 0.5,
   },
   eventDate: {
-    color: "#888",
+    color: Colors.dark.textMuted,
     fontSize: 12,
     fontWeight: "600",
   },
   eventTitle: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 20,
     fontWeight: "700",
     marginBottom: 8,
     lineHeight: 26,
   },
   eventLocation: {
-    color: "#aaa",
+    color: Colors.dark.textMuted,
     fontSize: 14,
     marginBottom: 10,
     fontWeight: "500",
   },
   eventDescription: {
-    color: "#777",
+    color: Colors.dark.textMuted,
     fontSize: 14,
     lineHeight: 22,
   },

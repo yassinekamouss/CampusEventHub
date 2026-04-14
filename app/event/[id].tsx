@@ -1,23 +1,19 @@
+import { Colors } from "@/constants/theme";
 import { Feather } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
+import { AnimatedPressable as TouchableOpacity } from "../../components/ui/design/AnimatedPressable";
 import { useAuth } from "../../hooks/use-auth";
 import { eventService } from "../../services/event-service";
-import {
-  cancelEventReminder,
-  scheduleEventReminder,
-} from "../../services/notification-service";
 import { Event } from "../../types/event";
 
 const CATEGORY_IMAGES: Record<string, string> = {
@@ -75,11 +71,6 @@ export default function EventDetailsScreen() {
       setIsRegistered(true);
       queryClient.invalidateQueries({ queryKey: ["userRegistrations"] });
       queryClient.invalidateQueries({ queryKey: ["totalRegistrations"] });
-
-      if (event) {
-        await scheduleEventReminder(event);
-        Alert.alert("Succès", "Rappel programmé pour cet événement !");
-      }
     } catch (err: any) {
       console.error(err);
     } finally {
@@ -95,8 +86,6 @@ export default function EventDetailsScreen() {
       setIsRegistered(false);
       queryClient.invalidateQueries({ queryKey: ["userRegistrations"] });
       queryClient.invalidateQueries({ queryKey: ["totalRegistrations"] });
-
-      await cancelEventReminder(id!);
     } catch (err: any) {
       console.error(err);
     } finally {
@@ -107,7 +96,7 @@ export default function EventDetailsScreen() {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#e60000" />
+        <ActivityIndicator size="large" color={Colors.dark.primary} />
       </View>
     );
   }
@@ -207,26 +196,26 @@ export default function EventDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
   },
   centerContainer: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
     justifyContent: "center",
     alignItems: "center",
   },
   errorText: {
-    color: "#ff4444",
+    color: Colors.dark.danger,
     fontSize: 16,
     marginBottom: 20,
   },
   backBtn: {
     padding: 12,
-    backgroundColor: "#1e1e1e",
+    backgroundColor: Colors.dark.surface,
     borderRadius: 8,
   },
   backBtnText: {
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 16,
   },
   imageContainer: {
@@ -244,7 +233,7 @@ const styles = StyleSheet.create({
     right: 20,
     width: 40,
     height: 40,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: Colors.dark.overlay,
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -253,13 +242,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     left: 20,
-    backgroundColor: "#e60000",
+    backgroundColor: Colors.dark.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
   },
   categoryText: {
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 1,
@@ -271,7 +260,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "800",
-    color: "#fff",
+    color: Colors.dark.text,
     marginBottom: 20,
     lineHeight: 34,
   },
@@ -282,24 +271,24 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 15,
-    color: "#aaa",
+    color: Colors.dark.textMuted,
     marginLeft: 12,
     fontWeight: "500",
   },
   divider: {
     height: 1,
-    backgroundColor: "#2a2a2a",
+    backgroundColor: Colors.dark.border,
     marginVertical: 24,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#eee",
+    color: Colors.dark.text,
     marginBottom: 12,
   },
   description: {
     fontSize: 16,
-    color: "#aaa",
+    color: Colors.dark.textMuted,
     lineHeight: 26,
   },
   footer: {
@@ -309,26 +298,26 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 20,
     paddingBottom: 30,
-    backgroundColor: "rgba(18,18,18,0.9)",
+    backgroundColor: Colors.dark.overlay,
     borderTopWidth: 1,
-    borderTopColor: "#222",
+    borderTopColor: Colors.dark.border,
   },
   primaryBtn: {
-    backgroundColor: "#e60000",
+    backgroundColor: Colors.dark.primary,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   dangerBtn: {
-    backgroundColor: "rgba(255, 68, 68, 0.9)",
+    backgroundColor: Colors.dark.danger,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   dangerBtnText: {
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 16,
     fontWeight: "bold",
     letterSpacing: 0.5,
@@ -339,7 +328,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   primaryBtnText: {
-    color: "#fff",
+    color: Colors.dark.text,
     fontSize: 16,
     fontWeight: "bold",
     letterSpacing: 0.5,

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import React from "react";
@@ -48,7 +49,10 @@ export default function LoginScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#121212" />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={Colors.dark.background}
+      />
       <View style={styles.header}>
         <Text style={styles.brandSubtitle}>// SYSTEM_ACCESS</Text>
         <Text style={styles.title}>Campus Event Hub</Text>
@@ -140,7 +144,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: Colors.dark.background,
     justifyContent: "center",
     paddingHorizontal: 32,
   },
@@ -148,21 +152,21 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   brandSubtitle: {
-    color: "#0066cc",
+    color: Colors.dark.primary,
     fontSize: 10,
     fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
     letterSpacing: 2,
     marginBottom: 12,
   },
   title: {
-    color: "#EAEAEA",
+    color: Colors.dark.text,
     fontSize: 32,
     fontWeight: "800",
     letterSpacing: -1,
     marginBottom: 8,
   },
   subtitle: {
-    color: "#777777",
+    color: Colors.dark.textMuted,
     fontSize: 15,
     fontWeight: "400",
   },
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    color: "#8A8A8A",
+    color: Colors.dark.textMuted,
     fontSize: 10,
     fontWeight: "700",
     letterSpacing: 1.5,
@@ -182,42 +186,42 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    backgroundColor: "#1A1A1A",
-    color: "#EAEAEA",
+    backgroundColor: Colors.dark.inputBackground,
+    color: Colors.dark.text,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderWidth: 1,
-    borderColor: "#2A2A2A",
+    borderColor: Colors.dark.inputBorder,
     borderRadius: 4,
     fontSize: 16,
   },
   inputError: {
-    borderColor: "#D32F2F",
-    backgroundColor: "rgba(211, 47, 47, 0.05)",
+    borderColor: Colors.dark.danger,
+    backgroundColor: Colors.dark.dangerSoft,
   },
   errorText: {
-    color: "#D32F2F",
+    color: Colors.dark.danger,
     fontSize: 12,
     marginTop: 8,
     fontWeight: "500",
   },
   globalErrorContainer: {
-    backgroundColor: "rgba(211, 47, 47, 0.1)",
+    backgroundColor: Colors.dark.dangerSoft,
     padding: 16,
     borderRadius: 4,
     borderLeftWidth: 3,
-    borderLeftColor: "#D32F2F",
+    borderLeftColor: Colors.dark.danger,
     marginTop: 8,
     marginBottom: 12,
   },
   globalErrorText: {
-    color: "#FF6B6B",
+    color: Colors.dark.danger,
     fontSize: 13,
     fontWeight: "500",
   },
   button: {
     width: "100%",
-    backgroundColor: "#0066cc",
+    backgroundColor: Colors.dark.primary,
     paddingVertical: 18,
     borderRadius: 4,
     flexDirection: "row",
@@ -226,14 +230,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonDisabled: {
-    backgroundColor: "#003366",
+    backgroundColor: Colors.dark.primarySoft,
     opacity: 0.7,
   },
   spinner: {
     marginRight: 10,
   },
   buttonText: {
-    color: "#ffffff",
+    color: Colors.dark.text,
     fontSize: 13,
     fontWeight: "800",
     letterSpacing: 1.5,
@@ -245,11 +249,11 @@ const styles = StyleSheet.create({
     marginTop: 48,
   },
   footerText: {
-    color: "#666666",
+    color: Colors.dark.textMuted,
     fontSize: 14,
   },
   linkText: {
-    color: "#0066cc",
+    color: Colors.dark.primary,
     fontSize: 14,
     fontWeight: "700",
   },
