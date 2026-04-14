@@ -1,25 +1,42 @@
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../hooks/use-auth";
 import { EventModel, useAdminEvents as useEvents } from "../../services/events";
+
+// Category images mapping
+const CATEGORY_IMAGES: Record<string, string> = {
+  Conference:
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=60",
+  Workshop:
+    "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&auto=format&fit=crop&q=60",
+  Social:
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop&q=60",
+  academic:
+    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=60",
+  default:
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=60",
+};
 
 export default function FeedScreen() {
   const { signOut } = useAuth();
   const { eventsQuery } = useEvents();
+  const router = useRouter();
 
   const renderEventItem = ({ item }: { item: EventModel }) => {
     const eventDate = new Date(item.date).toLocaleDateString("fr-FR", {
-      weekday: "long",
+      weekday: "short",
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -27,23 +44,45 @@ export default function FeedScreen() {
       minute: "2-digit",
     });
 
+    const categoryStr = (item as any).category || "default";
+    const imageUrl = CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
+
     return (
-      <View style={styles.eventCard}>
-        <Text style={styles.eventTitle}>{item.title}</Text>
-        <Text style={styles.eventDate}>{eventDate}</Text>
-        <Text style={styles.eventLocation}>{item.location}</Text>
-        <Text style={styles.eventDescription}>{item.description}</Text>
-      </View>
+      <TouchableOpacity
+        style={styles.eventCard}
+        activeOpacity={0.8}
+        onPress={() => router.push(`/event/${item.id}`)}>
+        <Image source={{ uri: imageUrl }} style={styles.cardImage} />
+
+        <View style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{categoryStr.toUpperCase()}</Text>
+            </View>
+            <Text style={styles.eventDate}>{eventDate}</Text>
+          </View>
+
+          <Text style={styles.eventTitle} numberOfLines={2}>
+            {item.title}
+          </Text>
+          <Text style={styles.eventLocation} numberOfLines={1}>
+            {item.location}
+          </Text>
+          <Text style={styles.eventDescription} numberOfLines={2}>
+            {item.description}
+          </Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" backgroundColor="#0a0a0a" />
+      <StatusBar style="light" backgroundColor="#121212" />
 
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Campus Events</Text>
+        <Text style={styles.headerTitle}>Découvrir</Text>
         <TouchableOpacity onPress={signOut} style={styles.logoutBtn}>
           <Text style={styles.logoutText}>Déconnexion</Text>
         </TouchableOpacity>
@@ -52,7 +91,7 @@ export default function FeedScreen() {
       {/* Feed Content */}
       {eventsQuery.isLoading ? (
         <View style={styles.centerContent}>
-          <ActivityIndicator size="large" color="#0066cc" />
+          <ActivityIndicator size="large" color="#e60000" />
         </View>
       ) : eventsQuery.isError ? (
         <View style={styles.centerContent}>
@@ -81,31 +120,32 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0a0a0a",
+    backgroundColor: "#121212", // dark theme bg
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === "android" ? 40 : 10,
+    paddingTop: Platform.OS === "android" ? 20 : 10,
     paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#222",
   },
   headerTitle: {
     color: "#ffffff",
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: "800",
+    letterSpacing: -0.5,
   },
   logoutBtn: {
-    backgroundColor: "#222",
+    backgroundColor: "#1e1e1e",
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#333",
   },
   logoutText: {
-    color: "#fff",
+    color: "#ccc",
     fontSize: 14,
     fontWeight: "600",
   },
@@ -115,44 +155,78 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    color: "#ff4444",
+    color: "#e60000",
   },
   emptyText: {
     color: "#777",
     textAlign: "center",
     marginTop: 40,
+    fontSize: 16,
   },
   listContent: {
-    padding: 20,
+    padding: 16,
+    paddingBottom: 100,
   },
   eventCard: {
-    backgroundColor: "#121212",
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
+    backgroundColor: "#1e1e1e",
+    borderRadius: 16,
+    marginBottom: 20,
+    overflow: "hidden",
     borderWidth: 1,
     borderColor: "#2a2a2a",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  cardImage: {
+    width: "100%",
+    height: 180,
+    backgroundColor: "#222",
+  },
+  cardContent: {
+    padding: 16,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  badge: {
+    backgroundColor: "#e60000", // Thinkpad red accent
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  badgeText: {
+    color: "#ffffff",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+  eventDate: {
+    color: "#888",
+    fontSize: 12,
+    fontWeight: "600",
   },
   eventTitle: {
     color: "#ffffff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 6,
-  },
-  eventDate: {
-    color: "#0066cc",
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 4,
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 8,
+    lineHeight: 26,
   },
   eventLocation: {
-    color: "#999",
-    fontSize: 13,
-    marginBottom: 12,
+    color: "#aaa",
+    fontSize: 14,
+    marginBottom: 10,
+    fontWeight: "500",
   },
   eventDescription: {
-    color: "#ccc",
+    color: "#777",
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 22,
   },
 });

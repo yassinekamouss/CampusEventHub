@@ -8,14 +8,11 @@ import React, {
 } from "react";
 import { supabase } from "../services/supabase";
 
-// Définition des rôles
 export type UserRole = "admin" | "student";
 
-// Typage strict du profil utilisateur
 export interface UserProfile {
   id: string;
   role: UserRole;
-  // D'autres champs peuvent être ajoutés ici (nom, prenom, etc.)
 }
 
 interface AuthContextType {
@@ -30,7 +27,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
 
-// Logique pour protéger les routes automatiquement
 function useProtectedRoute(
   user: User | null,
   profile: UserProfile | null,
@@ -40,28 +36,35 @@ function useProtectedRoute(
   const router = useRouter();
 
   useEffect(() => {
-    // Ne rien faire tant que l'état d'authentification n'est pas initialement chargé
     if (!isInitialized) return;
 
-    // Vérifier si l'utilisateur se trouve dans le groupe de routes d'authentification ou admin
-    const inAuthGroup = (segments[0] as string) === "(auth)";
-    const inAdminGroup = (segments[0] as string) === "(admin)";
+    if (user && !profile) {
+      // Attendre que le profil soit chargé
+      console.log("AuthContext: Waiting for profile...", { user: user.id });
+      return;
+    }
+
+    console.log("AuthContext: Routing Evaluation...", {
+      user: !!user,
+      profile: profile?.role,
+      segments,
+    });
+
+    const inAuthGroup = segments[0] === "(auth)";
+    const inAdminGroup = segments[0] === "(admin)";
+    const isRoot = segments.length === 0 || !segments[0];
 
     if (!user && !inAuthGroup) {
-      // Utilisateur non connecté essayant d'accéder à une route protégée
       router.replace("/(auth)/login" as Href);
     } else if (user && profile) {
-      // Une fois le profil chargé, on gère les redirections par rôle
-      if (inAuthGroup) {
-        // Redirection depuis le login/signup
+      if (inAuthGroup || isRoot) {
         if (profile.role === "admin") {
           router.replace("/(admin)/dashboard" as Href);
         } else {
-          router.replace("/(tabs)/index" as Href);
+          router.replace("/(tabs)" as Href);
         }
       } else if (inAdminGroup && profile.role !== "admin") {
-        // Protection de la route admin pour les étudiants
-        router.replace("/(tabs)/index" as Href);
+        router.replace("/(tabs)" as Href);
       }
     }
   }, [user, profile, segments, isInitialized, router]);
@@ -73,30 +76,33 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  // 1. Initialiser la session depuis le stockage de l'appareil
   useEffect(() => {
-    const fetchSession = async () => {
+    const initializeAuth = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        await fetchProfile(session.user.id);
+      }
       setIsInitialized(true);
     };
 
-    fetchSession();
+    initializeAuth();
 
-    // 2. Écouter les changements d'état (login, logout, token refresh...)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
-      // Reset le profil si déconnexion
       if (!newSession?.user) {
         setProfile(null);
+        if (!isInitialized) setIsInitialized(true);
+      } else {
+        await fetchProfile(newSession.user.id);
+        if (!isInitialized) setIsInitialized(true);
       }
     });
 
@@ -105,40 +111,48 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  // 3. Récupérer le profil et le rôle Supabase quand l'utilisateur change
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user) return;
+  const fetchProfile = async (userId: string) => {
+    try {
+      // Fallback/timeout to stop infinite loading/waiting if DB is slow or profile missing
+      let isTimeout = false;
+      const timeoutId = setTimeout(() => {
+        isTimeout = true;
+        console.warn("fetchProfile timeout reached. Using fallback (student).");
+        setProfile({ id: userId, role: "student" });
+      }, 5000);
 
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, role")
+        .eq("id", userId)
+        .single();
 
-        if (error) throw error;
-        if (data) setProfile(data as UserProfile);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération du profil utilisateur",
-          error,
-        );
+      clearTimeout(timeoutId);
+      if (isTimeout) return;
+
+      if (error) throw error;
+      if (data) {
+        setProfile({ id: data.id, role: data.role as UserRole });
+      } else {
+        setProfile({ id: userId, role: "student" });
       }
-    };
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération du profil utilisateur",
+        error,
+      );
+      // Fallback to allow navigating somewhere instead of infinite loop
+      setProfile({ id: userId, role: "student" });
+    }
+  };
 
-    fetchProfile();
-  }, [user]);
-
-  // Exécution de la protection de route à chaque changement d'état
   useProtectedRoute(user, profile, isInitialized);
 
-  // Méthode utilitaire de déconnexion
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
-  const value = {
+  const value: AuthContextType = {
     session,
     user,
     profile,
