@@ -18,12 +18,12 @@
 3. [Philosophie d'Architecture](#-philosophie-darchitecture)
 4. [Stack Technique & Choix d'Ingénierie](#-stack-technique--choix-dingénierie)
 5. [Fonctionnalités Core & RAG IA](#-fonctionnalités-core--rag-ia)
-6. [Gouvernance des Données & Sécurité](#-gouvernance-des-données--sécurité)
-7. [Design System : ThinkPad Neo-Brutalism](#-design-system--thinkpad-neo-brutalism)
-8. [Workflow d'Installation](#-workflow-dinstallation)
-9. [Roadmap & Évolutions](#-roadmap--évolutions)
-10. [Auteur](#-auteur)
-
+6. [Cloud Object Storage (Architecture S3 / Supabase)](#-cloud-object-storage-architecture-s3--supabase-storage)
+7. [Gouvernance des Données & Sécurité](#-gouvernance-des-données--sécurité)
+8. [Design System : ThinkPad Neo-Brutalism](#-design-system--thinkpad-neo-brutalism)
+9. [Workflow d'Installation](#-workflow-dinstallation)
+10. [Roadmap & Évolutions](#-roadmap--évolutions)
+11. [Auteur](#-auteur)
 ---
 
 ## 🎯 Vision et Mission du Projet
@@ -101,6 +101,14 @@ L'application n'utilise pas l'IA comme un simple gadget de chat, mais comme un a
 Pour maximiser la rétention sans infrastructure complexe de Push Notifications.
 * **Calcul Déterministe :** Lors de l'inscription à un événement, l'algorithme calcule le `TimeDelta` et programme un Trigger via le Thread natif de l'OS (Android AlarmManager / iOS UNUserNotificationCenter) exactement 1 heure avant le début.
 * **Garbage Collection :** Désinscription = Annulation immédiate du token de rappel local.
+
+---
+
+### 🗄️ Cloud Object Storage (Architecture S3 / Supabase Storage)
+La gestion des assets multimédias (affiches d'événements, avatars) ne s'appuie pas sur de simples encodages Base64, mais sur une véritable infrastructure de stockage objet distribuée.
+* **S3-Compatible Pipeline :** Utilisation de Supabase Storage (basé sur le protocole S3 AWS) pour garantir une scalabilité de stockage illimitée et une distribution asynchrone des fichiers lourds.
+* **Secure Upload & RLS sur Buckets :** L'upload des images depuis React Native (`FormData` via URI locaux) est intercepté et validé par des politiques RLS appliquées *directement* sur les buckets de stockage. (Ex: Un utilisateur authentifié ne peut modifier que son propre dossier média).
+* **Edge Caching & Optimisation :** Les URL publiques générées bénéficient du CDN global de Supabase, garantissant un téléchargement quasi-instantané des images lors du défilement intensif du flux d'événements (Event Feed), éliminant l'effet de "pop-in" visuel dans l'interface.
 
 ---
 
