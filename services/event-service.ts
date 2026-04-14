@@ -3,6 +3,22 @@ import { supabase } from "./supabase";
 
 export const eventService = {
   /**
+   * Fetches all events.
+   */
+  fetchAllEvents: async (): Promise<Event[]> => {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .order("date", { ascending: true });
+
+    if (error) {
+      throw new Error(`Error fetching all events: ${error.message}`);
+    }
+
+    return data as Event[];
+  },
+
+  /**
    * Fetches all upcoming events, ordered by date ascending.
    */
   getUpcomingEvents: async (): Promise<Event[]> => {

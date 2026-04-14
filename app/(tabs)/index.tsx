@@ -99,9 +99,16 @@ export default function FeedScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Découvrir</Text>
-        <TouchableOpacity onPress={signOut} style={styles.logoutBtn}>
-          <Text style={styles.logoutText}>Déconnexion</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          <TouchableOpacity
+            style={styles.aiBtn}
+            onPress={() => router.push("/ai-assistant")}>
+            <Feather name="sparkles" size={20} color="#0066cc" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={signOut} style={styles.logoutBtn}>
+            <Text style={styles.logoutText}>Déconnexion</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Search Bar */}
@@ -166,6 +173,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "800",
     letterSpacing: -0.5,
+  },
+  aiBtn: {
+    backgroundColor: "#1e1e1e",
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#333",
   },
   logoutBtn: {
     backgroundColor: "#1e1e1e",
