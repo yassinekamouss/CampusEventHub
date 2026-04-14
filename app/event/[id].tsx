@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,6 +14,10 @@ import {
 } from "react-native";
 import { useAuth } from "../../hooks/use-auth";
 import { eventService } from "../../services/event-service";
+import {
+  cancelEventReminder,
+  scheduleEventReminder,
+} from "../../services/notification-service";
 import { Event } from "../../types/event";
 
 const CATEGORY_IMAGES: Record<string, string> = {
@@ -70,6 +75,11 @@ export default function EventDetailsScreen() {
       setIsRegistered(true);
       queryClient.invalidateQueries({ queryKey: ["userRegistrations"] });
       queryClient.invalidateQueries({ queryKey: ["totalRegistrations"] });
+
+      if (event) {
+        await scheduleEventReminder(event);
+        Alert.alert("Succès", "Rappel programmé pour cet événement !");
+      }
     } catch (err: any) {
       console.error(err);
     } finally {
@@ -85,6 +95,8 @@ export default function EventDetailsScreen() {
       setIsRegistered(false);
       queryClient.invalidateQueries({ queryKey: ["userRegistrations"] });
       queryClient.invalidateQueries({ queryKey: ["totalRegistrations"] });
+
+      await cancelEventReminder(id!);
     } catch (err: any) {
       console.error(err);
     } finally {
