@@ -221,15 +221,58 @@ export const eventService = {
     return events as Event[];
   },
 
-  /**
-   * Placeholder for event image upload.
+  /**   * Fetches user statistics (joined vs created events).
    */
-  uploadEventImage: async (file: object): Promise<string> => {
-    // Implement actual file uploading logic via Supabase Storage
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("https://example.com/placeholder.png");
-      }, 500);
-    });
+  getUserStats: async (
+    userId: string,
+  ): Promise<{ joined: number; created: number }> => {
+    const { count: joinedCount, error: joinedError } = await supabase
+      .from("registrations")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId);
+
+    if (joinedError)
+      throw new Error(`Error fetching joined stats: ${joinedError.message}`);
+
+    const { count: createdCount, error: createdError } = await supabase
+      .from("events")
+      .select("*", { count: "exact", head: true })
+      .eq("created_by", userId);
+
+    if (createdError)
+      throw new Error(`Error fetching created stats: ${createdError.message}`);
+
+    return {
+      joined: joinedCount || 0,
+      created: createdCount || 0,
+    };
+  },
+
+  /**   * Upload an event image to Supabase Storage.
+   */
+  uploadEventImage: async (imageUri: string): Promise<string> => {
+    try {
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.jpg`;
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      const { data, error } = await supabase.storage
+        .from("event-posters")
+        .upload(fileName, blob, {
+          contentType: "image/jpeg",
+        });
+
+      if (error) {
+        throw new Error(`Error uploading image: ${error.message}`);
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("event-posters")
+        .getPublicUrl(data.path);
+
+      return urlData.publicUrl;
+    } catch (error: any) {
+      throw new Error(`Failed to upload event image: ${error.message}`);
+    }
   },
 };

@@ -112,7 +112,8 @@ export default function EventDetailsScreen() {
   }
 
   const categoryStr = event.category || "default";
-  const imageUrl = CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
+  const imageUrl =
+    event.image_url || CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
 
   const eventDate = new Date(event.date).toLocaleDateString("fr-FR", {
     weekday: "long",

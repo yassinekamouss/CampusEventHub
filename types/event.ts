@@ -5,6 +5,7 @@ export interface Event {
   date: string;
   location: string;
   category?: string;
+  image_url?: string;
   created_at: string;
   created_by: string;
 }
@@ -15,6 +16,7 @@ export interface CreateEventDTO {
   date: string;
   location: string;
   category?: string;
+  image_url?: string;
   created_by: string;
 }
 

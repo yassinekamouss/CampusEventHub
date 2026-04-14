@@ -1,6 +1,7 @@
+import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -8,6 +9,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -33,6 +35,7 @@ export default function FeedScreen() {
   const { signOut } = useAuth();
   const { eventsQuery } = useEvents();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const renderEventItem = ({ item }: { item: EventModel }) => {
     const eventDate = new Date(item.date).toLocaleDateString("fr-FR", {
@@ -44,8 +47,9 @@ export default function FeedScreen() {
       minute: "2-digit",
     });
 
-    const categoryStr = (item as any).category || "default";
-    const imageUrl = CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
+    const categoryStr = item.category || "default";
+    const imageUrl =
+      item.image_url || CATEGORY_IMAGES[categoryStr] || CATEGORY_IMAGES.default;
 
     return (
       <TouchableOpacity
@@ -76,6 +80,18 @@ export default function FeedScreen() {
     );
   };
 
+  const filteredEvents =
+    eventsQuery.data?.filter((event) => {
+      if (!searchText) return true;
+      const lowerSearch = searchText.toLowerCase();
+      return (
+        (event.title && event.title.toLowerCase().includes(lowerSearch)) ||
+        (event.category &&
+          event.category.toLowerCase().includes(lowerSearch)) ||
+        (event.location && event.location.toLowerCase().includes(lowerSearch))
+      );
+    }) || [];
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" backgroundColor="#121212" />
@@ -86,6 +102,23 @@ export default function FeedScreen() {
         <TouchableOpacity onPress={signOut} style={styles.logoutBtn}>
           <Text style={styles.logoutText}>Déconnexion</Text>
         </TouchableOpacity>
+      </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Feather
+          name="search"
+          size={20}
+          color="#888"
+          style={styles.searchIcon}
+        />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Rechercher par titre, catégorie ou lieu..."
+          placeholderTextColor="#888"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
       </View>
 
       {/* Feed Content */}
@@ -101,15 +134,13 @@ export default function FeedScreen() {
         </View>
       ) : (
         <FlatList
-          data={eventsQuery.data}
+          data={filteredEvents}
           keyExtractor={(item) => item.id}
           renderItem={renderEventItem}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>
-              Aucun événement à venir pour le moment.
-            </Text>
+            <Text style={styles.emptyText}>Aucun événement trouvé.</Text>
           }
         />
       )}
@@ -148,6 +179,26 @@ const styles = StyleSheet.create({
     color: "#ccc",
     fontSize: 14,
     fontWeight: "600",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1e1e1e",
+    borderWidth: 1,
+    borderColor: "#333",
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    height: 44,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    color: "#fff",
+    fontSize: 14,
   },
   centerContent: {
     flex: 1,

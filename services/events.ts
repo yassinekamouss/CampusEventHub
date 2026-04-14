@@ -8,6 +8,7 @@ export interface EventModel {
   location: string;
   date: string;
   category?: string;
+  image_url?: string;
   created_at?: string;
 }
 
@@ -24,7 +25,9 @@ export const fetchEvents = async (): Promise<EventModel[]> => {
   return data || [];
 };
 
-export const createEvent = async (newEvent: InsertEvent): Promise<EventModel> => {
+export const createEvent = async (
+  newEvent: InsertEvent,
+): Promise<EventModel> => {
   const { data, error } = await supabase
     .from("events")
     .insert([newEvent])
@@ -37,17 +40,17 @@ export const createEvent = async (newEvent: InsertEvent): Promise<EventModel> =>
 
 // TanStack Query Hooks Wrapper
 export const useAdminEvents = () => {
-    const queryClient = useQueryClient();
-    
-    const eventsQuery = useQuery({
-        queryKey: ["events"],
-        queryFn: fetchEvents,
-    });
+  const queryClient = useQueryClient();
 
-    const addEventMutation = useMutation({
-        mutationFn: createEvent,
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["events"] }),
-    });
+  const eventsQuery = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents,
+  });
 
-    return { eventsQuery, addEventMutation };
+  const addEventMutation = useMutation({
+    mutationFn: createEvent,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["events"] }),
+  });
+
+  return { eventsQuery, addEventMutation };
 };

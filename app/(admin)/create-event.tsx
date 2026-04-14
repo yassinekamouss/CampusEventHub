@@ -1,10 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -38,6 +41,7 @@ export default function CreateEventScreen() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const {
     control,
@@ -54,6 +58,18 @@ export default function CreateEventScreen() {
 
   const selectedCategory = watch("category");
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
   const onSubmit = async (data: EventFormData) => {
     if (!user) {
       Alert.alert("Error", "You must be logged in to create an event");
@@ -62,8 +78,15 @@ export default function CreateEventScreen() {
 
     try {
       setIsSubmitting(true);
+
+      let image_url = undefined;
+      if (imageUri) {
+        image_url = await eventService.uploadEventImage(imageUri);
+      }
+
       await eventService.createEvent({
         ...data,
+        image_url,
         created_by: user.id,
       });
       queryClient.invalidateQueries({ queryKey: ["recentEvents"] });
@@ -203,6 +226,18 @@ export default function CreateEventScreen() {
         )}
       </View>
 
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Event Poster</Text>
+        <Pressable style={styles.imagePickerButton} onPress={pickImage}>
+          <Text style={styles.imagePickerButtonText}>
+            Sélectionner une affiche
+          </Text>
+        </Pressable>
+        {imageUri && (
+          <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        )}
+      </View>
+
       <Pressable
         style={[
           styles.submitButton,
@@ -290,6 +325,28 @@ const styles = StyleSheet.create({
   categoryButtonTextActive: {
     color: "#121212",
     fontWeight: "bold",
+  },
+  imagePickerButton: {
+    backgroundColor: "#1e1e1e",
+    borderWidth: 1,
+    borderColor: "#333333",
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  imagePickerButtonText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  imagePreview: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    resizeMode: "cover",
+    marginTop: 8,
   },
   submitButton: {
     backgroundColor: "#0066cc",
